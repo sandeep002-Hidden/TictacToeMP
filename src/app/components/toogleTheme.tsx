@@ -8,7 +8,7 @@ export function ToggleTheme() {
   const [mode, setMode] = useState(false);
   return (
     <>
-      <div className=" right-8 rounded-lg p-2 font-bold text-xl bg-both text-white hover:bg-highlight font-serif text-pretty">
+      <div className=" right-8 rounded-lg p-2 font-bold text-xl  text-white font-serif text-pretty">
         {mode && (
           <div>
             <button

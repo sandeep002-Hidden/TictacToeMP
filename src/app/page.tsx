@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Loading from "./components/Home";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import Link from "next/link";
 
 export default function Main() {
   const [showHome, setShowHome] = useState(true);
@@ -50,21 +51,21 @@ export default function Main() {
                     as="button"
                     className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
                   >
-                    <span>Vs Friend</span>
+                    <Link href={"/vsFriend"}>Vs Friend</Link>
                   </HoverBorderGradient>
                   <HoverBorderGradient
                     containerClassName="rounded-full"
                     as="button"
                     className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
                   >
-                    <span>Vs Computer</span>
+                    <Link href={"/vsComputer"}>Vs Computer</Link>
                   </HoverBorderGradient>
                   <HoverBorderGradient
                     containerClassName="rounded-full"
                     as="button"
                     className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
                   >
-                    <span>Vs Globe</span>
+                    <Link href={"/vsGlobe"}>Vs Globe</Link>
                   </HoverBorderGradient>
                 </div>
               </div>

@@ -12,7 +12,12 @@ module.exports = {
   content: ["./src/**/*.{ts,tsx}"],
   darkMode: "class",
   theme: {
-    // rest of the code
+    extend: {
+      colors: {
+        'highlight': 'rgb(110, 6, 242)',
+        'both':'rgb(161, 0, 255)',
+      },
+    },
   },
   plugins: [
     addVariablesForColors,
