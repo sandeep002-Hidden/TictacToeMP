@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 export default function Login() {
   const [user, setUser] = useState({
-    userName: "",
+    email: "",
     password: "",
   });
   const handelLogin=async()=>{
@@ -22,13 +22,13 @@ export default function Login() {
 
         <div className="my-8">
             <LabelInputContainer>
-              <Label htmlFor="userName">First Name</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
-                id="userName"
+                id="email"
                 placeholder="S@ndeep002"
                 type="text"
                 required
-                onChange={(e)=>{setUser({...user,userName:e.target.value})}}
+                onChange={(e)=>{setUser({...user,email:e.target.value})}}
               />
             </LabelInputContainer>
             

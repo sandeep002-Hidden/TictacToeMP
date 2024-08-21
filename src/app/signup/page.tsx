@@ -1,18 +1,20 @@
 "use client";
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
+import axios from "axios";
 export default function SignUpFormDemo() {
-    const [user,setUser]=useState({
-        FirstName:"",
-        userName:"",
-        password:""
-    })
-  const handleSubmit = (e: any) => {
+  const [user, setUser] = useState({
+    email: "",
+    username: "",
+    password: "",
+  });
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log(e);
+    await axios.post("/api/users/signup", user).then((res: any) => {
+      console.log(res.message);
+    });
   };
   return (
     <div className="min-h-screen flex justify-center items-center">
@@ -22,38 +24,44 @@ export default function SignUpFormDemo() {
         </h2>
 
         <div className="my-8">
+          <LabelInputContainer>
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              placeholder="hiihello4748@gmail.com"
+              type="text"
+              required
+              onChange={(e) => {
+                setUser({ ...user, email: e.target.value });
+              }}
+            />
+          </LabelInputContainer>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
-              <Label htmlFor="userName">First Name</Label>
+              <Label htmlFor="username">username</Label>
               <Input
-                id="userName"
+                id="username"
                 placeholder="S@ndeep002"
                 type="text"
                 required
-                onChange={(e)=>{setUser({...user,userName:e.target.value})}}
+                onChange={(e) => {
+                  setUser({ ...user, username: e.target.value });
+                }}
               />
             </LabelInputContainer>
-            <LabelInputContainer>
-              <Label htmlFor="FirstName">First Name</Label>
+            <LabelInputContainer className="mb-4">
+              <Label htmlFor="password">Password</Label>
               <Input
-                id="FirstName"
-                placeholder="Sandeep"
-                type="text"
+                id="password"
+                placeholder="••••••••"
+                type="password"
                 required
-                onChange={(e)=>{setUser({...user,FirstName:e.target.value})}}
+                onChange={(e) => {
+                  setUser({ ...user, password: e.target.value });
+                }}
               />
             </LabelInputContainer>
           </div>
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              placeholder="••••••••"
-              type="password"
-              required
-              onChange={(e)=>{setUser({...user,password:e.target.value})}}
-              />
-          </LabelInputContainer>
 
           <button
             className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"

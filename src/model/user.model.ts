@@ -2,9 +2,11 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-    FirstName: {
+    email: {
       type: String,
-      required: [true, "Provide the FirstName"],
+      required: [true, "Provide Your Email"],
+      unique: [true, "Email already Exist"],
+
     },
     userName: {
       type: String,
@@ -18,7 +20,13 @@ const userSchema = new mongoose.Schema(
     isVerified: {
       type: Boolean,
       default: false,
-    }
+    },
+    forgotPasswordToken: String,
+    forgotPasswordTokenExpire: Date,
+    verifyToken: String,
+    verifyTokenExpiry: Date,
+    Otp:Number,
+    OtpExpiry:Date,
   },
   { timestamps: true },
 );

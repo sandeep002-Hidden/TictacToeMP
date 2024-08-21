@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import { useState, useEffect } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface SquareProps {
   value: string | null;
@@ -24,10 +24,10 @@ interface BoardProps {
 
 function Board({ xIsNext, squares, onPlay }: BoardProps) {
   const [gameOver, setGameOver] = useState(false);
-  let status: any;
+  let status:any;
 
   useEffect(() => {
-    if (status && (status.includes("wins") || status === "It's a Draw")) {
+    if (status && (status.includes('wins') || status === "It's a Draw")) {
       setGameOver(true);
     }
   }, [status]);
@@ -37,30 +37,30 @@ function Board({ xIsNext, squares, onPlay }: BoardProps) {
       return;
     }
     const nextSquares = squares.slice();
-    console.log(xIsNext);
     if (xIsNext) {
-      nextSquares[i] = "X";
-      let num = random();
-      if (nextSquares[num] != null) {
-        num = random();
-      } else {
-        nextSquares[num] = "O";
-      }
+      nextSquares[i] = 'X';
+    } else {
+      nextSquares[i] = 'O';
     }
     onPlay(nextSquares);
   }
+  const makeToast=(status:any)=>{
+    toast.success("Hello");
+  }
   const winner = calculateWinner(squares);
-  if (winner === "X" || winner === "O") {
-    status = `${winner === "X" ? "You" : "computer"} won the game`;
-  } else if (winner === "Draw") {
+  if (winner === 'X' || winner === 'O') {
+    status = `${winner === 'X' ? 'Player 1' : 'Player 2'} wins the game`;
+    makeToast(status)
+  } else if (winner === 'Draw') {
     status = "It's a Draw";
   } else {
-    status = "Next player: " + (xIsNext ? "Player 1" : "Computer");
+    status = 'Next player: ' + (xIsNext ? 'Player 1' : 'Player 2');
   }
+
   return (
     <>
       <div className="relative">
-        <div className="mb-4 text-xl font-semibold text-center">{status}</div>
+        <div className="mb-4 text-xl font-semibold">{status}</div>
         <div className="grid grid-cols-3 gap-2">
           <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
           <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -78,9 +78,7 @@ function Board({ xIsNext, squares, onPlay }: BoardProps) {
 }
 
 export default function Game() {
-  const [history, setHistory] = useState<Array<Array<string | null>>>([
-    Array(9).fill(null),
-  ]);
+  const [history, setHistory] = useState<Array<Array<string | null>>>([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove];
@@ -95,11 +93,7 @@ export default function Game() {
     <div className="absolute z-10 min-h-screen w-full  flex justify-center items-center">
       <div className="flex flex-col items-center justify-center ">
         <div className="mb-8">
-          <Board
-            xIsNext={xIsNext}
-            squares={currentSquares}
-            onPlay={handlePlay}
-          />
+          <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
         </div>
       </div>
     </div>
@@ -126,11 +120,12 @@ function calculateWinner(squares: Array<string | null>): string | null {
   }
   const isBoardFull = squares.every((square) => square !== null);
   if (isBoardFull) {
-    return "Draw";
+    return 'Draw';
   }
   return null;
 }
 
-function random() {
-  return Math.floor(Math.random() * 9);
+
+function vsComp(){
+  
 }
