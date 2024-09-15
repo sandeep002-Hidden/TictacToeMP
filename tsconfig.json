@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/model/user.model.ts", "src/app/components/Game.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/model/user.model.ts", "src/app/components/Game.tsx", "src/app/vsFriend/room/[roomName]/page.jsx", "server.js"],
   "exclude": ["node_modules"]
 }

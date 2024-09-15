@@ -6,14 +6,17 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import axios from "axios";
+import { useRouter } from 'next/navigation'
+
 
 export default function CreateRoom() {
+  const router = useRouter()
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [room, setRoom] = useState({
     RoomName: "",
     roomPassword: "",
   });
-
   // Generates a random string 
   function generateRandomString(length: number): string {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -50,7 +53,10 @@ export default function CreateRoom() {
   const createRoom=async()=>{
     try {
         await axios.post("/api/users/vsFriend/createRoom",room).then((result)=>{
-            console.log(result)
+            if(result.data.success){
+              router.push(`/vsFriend/room/${room.RoomName}`)
+            }
+
         })
     } catch (error) {
         

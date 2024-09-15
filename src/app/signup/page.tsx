@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 export default function SignUpFormDemo() {
+  const [message,setMessage]=useState("")
+  const [success,setSuccess]=useState(false)
   const [user, setUser] = useState({
     email: "",
     username: "",
@@ -13,8 +15,16 @@ export default function SignUpFormDemo() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     await axios.post("/api/users/signup", user).then((res: any) => {
-      console.log(res.message);
-    });
+      if(res.data.success){
+        setMessage("Check Your Mail and Verify it")
+      }
+      else{
+        setMessage(res.data.message)
+      }
+    }).catch((error)=>{
+      setMessage("Error occur while Creating Your account")
+      console.log(error.message)
+    })
   };
   return (
     <div className="min-h-screen flex justify-center items-center">
@@ -22,7 +32,7 @@ export default function SignUpFormDemo() {
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 text-center">
           SignUp to Create play game with your friend or people around Globe
         </h2>
-
+        <h1 className="text-neutral-800 dark:text-neutral-200 text-center">{message}</h1>
         <div className="my-8">
           <LabelInputContainer>
             <Label htmlFor="email">Email</Label>

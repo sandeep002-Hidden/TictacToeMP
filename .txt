@@ -1,0 +1,50 @@
+///////////////////////socketIo.ts
+import http from "http";
+import SocketService from "./services/socketService";
+import { Socket } from "socket.io";
+async function init() {
+    const socketService=new SocketService();
+    const httpServer=http.createServer();
+    const port=8080
+    socketService.io.attach(httpServer);
+
+    httpServer.listen(port,()=>{
+        console.log("socket server")
+    })
+    socketService.initListener();
+}
+init()
+
+
+
+/service/socketservice.ts
+import {Server} from "socket.io";
+class SocketService{
+    private _io:Server;
+    constructor() {
+        this._io = new Server({
+            cors: {
+                origin: "*",
+                methods: "*",
+                credentials: true
+            }
+        });
+        console.log("Socket server initialized");
+    }
+    public initListener(){
+        const io=this.io;
+        io.on("connect",(socket)=>{
+            console.log("New Socket Connected",socket.id)
+            socket.on("event:message",async({message}:{message:string})=>{
+                console.log("New message received")
+            })
+        });
+        
+    }
+    get io(){
+        return this._io
+    }
+}
+
+
+export default SocketService

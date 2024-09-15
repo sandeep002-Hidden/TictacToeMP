@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import { useRouter } from 'next/navigation'
 
 
 export default function changePassword() {
@@ -15,10 +15,13 @@ export default function changePassword() {
   const [failure, setFailure] = useState(false);
   const [seeOtp, setSeeOtp] = useState(false);
   const [otp, setOtp] = useState("");
+  const router = useRouter()
+
   const [password, setPassword] = useState({
     newPassword: "",
     newPasswordConfirm: "",
   });
+
   useEffect(() => {
     setLoading(false);
     setMessage("");
@@ -111,6 +114,7 @@ export default function changePassword() {
                 setFailure(false);
                 setSuccess(true);
                 setMessage("Password Changed Success fully");
+                router.push("/profile")
               } else {
                 setSuccess(false);
                 setFailure(true);

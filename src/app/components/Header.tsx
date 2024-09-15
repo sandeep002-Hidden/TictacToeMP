@@ -12,7 +12,7 @@ export default function Header() {
           </div>
           <div className="h-full w-1/2 flex flex-1 justify-around items-center">
             <div>
-              <Link href="" className="text-lg font-semibold">
+              <Link href="/profile" className="text-lg font-semibold">
                 Profile
               </Link>
             </div>

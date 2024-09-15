@@ -10,15 +10,16 @@ export default function verifyEmailPage() {
   const [message, setMessage] = useState("");
   const verifyUserEmail = async () => {
     try {
-      await axios.post("/api/users/verifyemail", { token }).then((verifyEmailRes:any)=>{
-        console.log(verifyEmailRes)
-        if(verifyEmailRes.statusText==="OK"){
-            setVerified(true)
-        }
-        else{
-            setError(true)
-        }
-      })
+      await axios
+        .post("/api/users/verifyemail", { token })
+        .then((verifyEmailRes: any) => {
+          console.log(verifyEmailRes);
+          if (verifyEmailRes.statusText === "OK") {
+            setVerified(true);
+          } else {
+            setError(true);
+          }
+        });
     } catch (error: any) {
       setError(true);
       console.log(error.response.data);
@@ -51,6 +52,13 @@ export default function verifyEmailPage() {
           <h1>Verify token</h1>
           <h1>{message}</h1>
           <h2>{token ? `${token}` : "No token"}</h2>
+          {verified && (
+            <>
+              <button className="text-white">
+                <Link href={"/"}>Click here to login</Link>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </>

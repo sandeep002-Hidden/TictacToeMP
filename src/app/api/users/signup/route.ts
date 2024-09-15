@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     const userQ = await newUser.save()
     console.log("From Signup Backend");
     await sendEmail({ email, emailType: "VERIFY", userId: userQ._id });
-    return NextResponse.json({ message: "user Registered Success fully" });
+    return NextResponse.json({ message: "user Registered Success fully" ,success:true});
   } catch (error: any) {
     console.log("Error in Signup post");
   }

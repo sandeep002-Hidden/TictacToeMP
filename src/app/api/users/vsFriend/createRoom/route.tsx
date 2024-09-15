@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import connect from "@/database/connect";
 import bcryptjs from "bcryptjs";
 import Room from "@/model/room.model";
+import { getDataFromToken } from "@/helper/dataFromToken";
 
 connect();
+
 export async function POST(req: NextRequest) {
   try {
     const reqBody = await req.json();
@@ -15,15 +17,16 @@ export async function POST(req: NextRequest) {
         message: "Room with this name already exists",
       });
     }
-    const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(roomPassword, salt);
+    const adminId=await getDataFromToken(req)
+    console.log(adminId)
     const newRoom = new Room({
       RoomName,
       roomPassword,
-      password: hashedPassword,
+      player1:adminId
     });
+
     await newRoom.save();
-    return NextResponse.json({ message: "Got Message" });
+    return NextResponse.json({ message: "Created Room",success:true });
   } catch (error:any) {
     console.log(error.message)
     return NextResponse.json(

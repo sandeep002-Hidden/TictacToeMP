@@ -3,14 +3,29 @@ import React,{useState} from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import { useRouter } from 'next/navigation'
 
 export default function Login() {
+  const router = useRouter()
+  const [message,setMessage]=useState("")
+
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const handelLogin=async()=>{
-
+  const handelLogin=async(e:any)=>{
+    e.preventDefault();
+    await axios.post("/api/users/login",user).then((res)=>{
+      console.log(res)
+      if(res.data.success){
+        router.push("/");
+        setMessage(res.data.message)
+      }
+      else{
+        setMessage(res.data.message)
+      }
+    })
   }
   return (
     <>
@@ -19,13 +34,13 @@ export default function Login() {
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200 text-center">
           Login to play game with your friend or people around Globe
         </h2>
-
+        <h2 className="text-neutral-800 dark:text-neutral-200 text-center">{message}</h2>
         <div className="my-8">
             <LabelInputContainer>
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                placeholder="S@ndeep002"
+                placeholder="mohapatrasandeep756@gmail.com"
                 type="text"
                 required
                 onChange={(e)=>{setUser({...user,email:e.target.value})}}
@@ -47,7 +62,7 @@ export default function Login() {
             className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             onClick={handelLogin}
           >
-            SignUp
+            Login
             <BottomGradient />
           </button>
         </div>

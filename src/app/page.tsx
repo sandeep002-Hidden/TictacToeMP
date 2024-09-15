@@ -4,7 +4,6 @@ import Header from "./components/Header";
 import Loading from "./components/Home";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import Link from "next/link";
-
 export default function Main() {
   const [showHome, setShowHome] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
@@ -45,7 +44,6 @@ export default function Main() {
               <div className=" h-5/6 w-2/5"></div>
               <div className=" h-5/6 w-2/5">
                 <div className="h-full w-full flex justify-around items-center flex-col">
-                  
                   <HoverBorderGradient
                     containerClassName="rounded-full"
                     as="button"

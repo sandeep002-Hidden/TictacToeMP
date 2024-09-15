@@ -11,10 +11,15 @@ const RoomSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password must required"],
     },
-    isFull: {
-      type: Boolean,
-      default: false,
-    }
+    player1:{
+      type:String,
+      default:"",
+      required:[true, "Admin requires"],
+    },
+    player2:{
+      type:String,
+      default:""
+    },
   },
   { timestamps: true },
 );
