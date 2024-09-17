@@ -1,12 +1,17 @@
-"use client"
+import { SocketContextProvider } from "@/context/SocketContext";
 
-import { SocketContextProvider } from "@/context/SocketContext"
+const SocketProvider = ({
+  children,
+  roomName,
+}: {
+  children: React.ReactNode;
+  roomName: string;
+}) => {
+  return (
+    <SocketContextProvider roomName={roomName}>
+      {children}
+    </SocketContextProvider>
+  );
+};
 
-const SocketProvider=({children}:{children:React.ReactNode})=>{
-    return (
-        <SocketContextProvider>
-            {children}
-        </SocketContextProvider>
-    )
-}
 export default SocketProvider;

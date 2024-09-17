@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    gameHistory:{
+      type:Array,
+      default:[]
+    },
     forgotPasswordToken: String,
     forgotPasswordTokenExpire: Date,
     verifyToken: String,

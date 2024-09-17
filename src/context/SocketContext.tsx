@@ -1,52 +1,61 @@
-import { connect } from "http2";
 import { createContext, useContext, useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
-interface iSocketContext {}
+import { io } from "socket.io-client";
+
+interface iSocketContext {
+  socket: any;
+  isSocketConnected: boolean;
+  sendMessage: (roomName: string, message: string) => void;
+}
+
 export const SocketContext = createContext<iSocketContext | null>(null);
 
 export const SocketContextProvider = ({
   children,
+  roomName,
 }: {
   children: React.ReactNode;
+  roomName: string;
 }) => {
   const [socket, setSocket] = useState<any | null>(null);
-  const [isSocketConnected,setSocketConnected]=useState(false)
-  useEffect(()=>{
-    const newSocket=io()
-    setSocket(newSocket)
-    return ()=>{
-        newSocket.disconnect()
-    }
-  },[])
-  useEffect(()=>{
-    if(socket===null) return
-    if(socket.connected){
-        setSocketConnected(true)
-    }
-    socket.on("connect",()=>{
-        setSocketConnected(true)
-    })
-    socket.on("disconnec",()=>{
-        setSocketConnected(false)
+  const [isSocketConnected, setSocketConnected] = useState(false);
 
-    })
-    return ()=>{
+  useEffect(() => {
+    const newSocket = io();
+    setSocket(newSocket);
 
-        socket.off("connect",()=>{
-            setSocketConnected(true)
-        })
-        socket.off("disconnec",()=>{
-            setSocketConnected(true)
-        })
+    newSocket.on("connect", () => {
+      console.log("Socket connected");
+      setSocketConnected(true);
+      newSocket.emit("joinRoom", roomName);
+    });
+
+    newSocket.on("disconnect", () => {
+      console.log("Socket disconnected");
+      setSocketConnected(false);
+    });
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [roomName]);
+
+  const sendMessage = (roomName: string, message: string) => {
+    if (socket && isSocketConnected) {
+      socket.emit("chatMessage", roomName, message);
     }
-  },[socket]
-)
-  return <SocketContext.Provider value={{}}>{children}</SocketContext.Provider>;
+  };
+
+  return (
+    <SocketContext.Provider value={{ socket, isSocketConnected, sendMessage }}>
+      {children}
+    </SocketContext.Provider>
+  );
 };
+
 export const useSocket = () => {
   const context = useContext(SocketContext);
   if (context === null) {
-    throw new Error("useSocket must be used within SocketContectProvider");
+    throw new Error("useSocket must be used within SocketContextProvider");
   }
   return context;
 };

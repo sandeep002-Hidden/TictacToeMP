@@ -20,6 +20,10 @@ const RoomSchema = new mongoose.Schema(
       type:String,
       default:""
     },
+    isOpen:{
+      type:Boolean,
+      default:false
+    }
   },
   { timestamps: true },
 );
