@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSocket } from "@/context/SocketContext";
+import { useSocket } from "@/context/GameSocketContext";
 interface ChatProps {
-  roomName: string;
+  gameId: string;
   player: number;
 }
-export default function Chat({ roomName, player }: ChatProps) {
+export default function GameChat({ gameId, player }: ChatProps) {
   const { socket, sendMessage } = useSocket();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<any[]>([]);
@@ -19,7 +19,7 @@ export default function Chat({ roomName, player }: ChatProps) {
     };
   }, [socket]);
   const handleSendMessage = () => {
-    sendMessage(roomName, message);
+    sendMessage(gameId, message);
     setMessage("")
   };
   return (

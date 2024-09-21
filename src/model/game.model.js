@@ -5,11 +5,10 @@ const GameSchaema = new mongoose.Schema(
     player1:{
       type:String,
       default:"",
-      required:[true, "Admin requires"],
     },
     player2:{
       type:String,
-      default:""
+      default:"",
     },
     winner:{
         type:String,
@@ -22,7 +21,7 @@ const GameSchaema = new mongoose.Schema(
     moves:{
         type:Array,
         default:[]
-    }
+    },
   },
   { timestamps: true },
 );

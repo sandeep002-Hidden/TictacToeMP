@@ -1,22 +1,26 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-interface iSocketContext {
-  socket: any;
-  isSocketConnected: boolean;
-  sendMessage: (roomName: string, message: string) => void;
-  readyForMatch: (roomName: string, isReady: boolean) => void;
-  startMatch: (roomName: string) => void;
+interface arrayType{
+  move:string;
+  user:string;
 }
 
-export const SocketContext = createContext<iSocketContext | null>(null);
+interface GSocketContext {
+  socket: any;
+  isSocketConnected: boolean;
+  makeMove:(gameId:string,symbol:string,newList:arrayType[])=>void
+  winner:(gameId:string,moves:arrayType[],winner:string,winmove:number[])=>void
+  sendMessage: (roomName: string, message: string) => void;
 
-export const SocketContextProvider = ({
+}
+export const GameSocketContext = createContext<GSocketContext | null>(null);
+export const GameSocketContextProvider = ({
   children,
-  roomName,
+  GameId,
 }: {
   children: React.ReactNode;
-  roomName: string;
+  GameId: string;
 }) => {
   const [socket, setSocket] = useState<any | null>(null);
   const [isSocketConnected, setSocketConnected] = useState(false);
@@ -26,56 +30,51 @@ export const SocketContextProvider = ({
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
-      console.log("Socket connected");
+      console.log("Socket connected",newSocket.id);
       setSocketConnected(true);
-      newSocket.emit("joinRoom", roomName);
+      newSocket.emit("gamestart",GameId)
     });
-
     newSocket.on("disconnect", () => {
       console.log("Socket disconnected");
       setSocketConnected(false);
     });
-
     return () => {
       newSocket.disconnect();
     };
-  }, [roomName]);
+  }, [GameId]);
 
   const sendMessage = (roomName: string, message: string) => {
     if (socket && isSocketConnected) {
       socket.emit("chatMessage", roomName, message);
     }
   };
-
-  const readyForMatch = (roomName: string, isReady: boolean) => {
+  const makeMove=(gameId:string,symbol:string,newList:arrayType[])=>{
     if (socket && isSocketConnected) {
-      socket.emit("readyforGame", roomName, isReady);
+          socket.emit("move",gameId,symbol,newList)
+        }
+  }
+  const winner=(gameId:string,moves:arrayType[],winner:string,winmove:number[])=>{
+    if(socket && isSocketConnected){
+      socket.emit("winner",gameId,moves,winner,winmove)
     }
-  };
-
-  const startMatch = (roomName: string) => {
-    if (socket && isSocketConnected) {
-      socket.emit("startMatch", roomName);
-    }
-  };
-
+  }
   return (
-    <SocketContext.Provider
+    <GameSocketContext.Provider
       value={{
         socket,
         isSocketConnected,
         sendMessage,
-        readyForMatch,
-        startMatch,
+        makeMove,
+        winner,
       }}
     >
       {children}
-    </SocketContext.Provider>
+    </GameSocketContext.Provider>
   );
 };
 
 export const useSocket = () => {
-  const context = useContext(SocketContext);
+  const context = useContext(GameSocketContext);
   if (context === null) {
     throw new Error("useSocket must be used within SocketContextProvider");
   }

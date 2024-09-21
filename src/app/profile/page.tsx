@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Header from "@/app/components/Header";
-import Loading from "@/app/components/Loading"
+import Loading from "@/app/components/Loading";
 
 export default function Profile() {
   const [message, setMessage] = useState("");
@@ -54,9 +54,7 @@ export default function Profile() {
         </div>
         <div className="absolute z-10 min-h-screen flex justify-start items-start">
           <div>
-            {loading && (
-              <Loading/>
-            )}
+            {loading && <Loading />}
             <h1>UserName :- {user.username}</h1>
             <h1>Email :- {user.email}</h1>
             <button

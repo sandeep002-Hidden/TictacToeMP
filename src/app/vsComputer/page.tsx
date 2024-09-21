@@ -94,20 +94,18 @@ export default function VsComputer() {
             const innerA = calculateWinner(newList);
             if (innerA) {
               setWm("Computer Wins");
-              setWinner(true)
+              setWinner(true);
             }
           });
         } catch (error) {
           setError("try after some time");
         }
       } else {
-        setWinner(true)
-        if(a!="Draw"){
+        setWinner(true);
+        if (a != "Draw") {
           setWm(`You Wins`);
-        }
-        else{
+        } else {
           setWm(`It's a Draw`);
-
         }
       }
     } else {
@@ -123,12 +121,20 @@ export default function VsComputer() {
         <div className="text-white relative flex justify-center items-center min-h-96 text-2xl font-bold">
           <label>
             Select Your Symbol
-            <select value={selectedOption} onChange={handleChange} className="bg-transparent">
+            <select
+              value={selectedOption}
+              onChange={handleChange}
+              className="bg-transparent"
+            >
               <option value="" disabled>
                 choose
               </option>
-              <option value="X" className="bg-black text-white">X</option>
-              <option value="O" className="bg-black text-white">O</option>
+              <option value="X" className="bg-black text-white">
+                X
+              </option>
+              <option value="O" className="bg-black text-white">
+                O
+              </option>
             </select>
           </label>
         </div>
