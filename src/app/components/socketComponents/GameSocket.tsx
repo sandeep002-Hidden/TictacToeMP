@@ -2,12 +2,11 @@
 import { useSocket } from "@/context/GameSocketContext";
 import React, { useState, useEffect } from "react";
 import GameChat from "./GameChat";
-
+import LampDemo from "@/components/ui/lamp";
 interface GameProp {
   gameId: string;
-  symbol: string;
+  roomId: string;
 }
-
 interface SquareProps {
   value: string | null;
   onSquareClick: () => void;
@@ -19,52 +18,65 @@ interface ListItem {
   user: string;
 }
 
-export default function GameSocket({ gameId, symbol }: GameProp) {
+export default function GameSocket({
+  gameId,
+  roomId,
+}: GameProp) {
+  // const { gameId, symbol, player, roomId } = props;
+  // console.log(gameId, symbol, player, roomId)
   const { socket, makeMove, winner } = useSocket();
   const [list, setList] = useState<ListItem[]>(
     Array(9).fill({ move: "", user: "" })
   );
   const [canClick, setClick] = useState(false);
   const [usersymbol, setUserSymbol] = useState("");
-  const [player, setPlayer] = useState("");
-  //symbol
+  const [playerNo, setPlayerNo] = useState("");
+  const [gameWinner, setGameWinner] = useState("");
+  const [gameIdd, setGameId] = useState("");
+  const [roomIdd, setRoomId] = useState("");
+ 
   useEffect(() => {
-    if (!symbol) {
+    if (!gameId) {
+      console.log("No game id");
       return;
     }
-    setUserSymbol(symbol);
-  }, [symbol]);
-  // player No
-  useEffect(() => {
-    const player = localStorage.getItem("player");
-    if (player) {
-      setPlayer(player);
-    } else {
-      console.log("Return sand start again the game");
+    setGameId(gameId)
+  }, [gameId]);
+  //room Id
+  useEffect(()=>{
+    if(!roomId){
+      console.log("No Room")
+      return
     }
-  }, []);
+    setRoomId(roomId)
+    setUserSymbol(localStorage.getItem(`${roomId}as`)!)
+    setPlayerNo(localStorage.getItem(`${roomId}`)!)
+  },[roomId])
+
   //first move can click or not
   useEffect(() => {
-    if (localStorage.getItem("player") == "1" && !canClick) {
+    if (playerNo == "1" && !canClick) {
       setClick(true);
     }
-  }, []);
+  }, [playerNo]);
   //socket
   useEffect(() => {
     if (!socket) return;
     socket.on("move", (data: any) => {
-      if (usersymbol == "n") {
         if (data.symbol == "X") {
           setUserSymbol("O");
         } else {
           setUserSymbol("X");
         }
-      }
       calculateWinner(data.newList);
       setList(data.newList);
       setClick(true);
     });
     socket.on("winner", (data: any) => {
+      console.log(data)
+      setGameWinner(data.winner);
+      localStorage.removeItem(data.roomId)
+      localStorage.removeItem(`${data.roomId}as`)
       setClick(false);
     });
     return () => {
@@ -84,30 +96,30 @@ export default function GameSocket({ gameId, symbol }: GameProp) {
       </button>
     );
   }
-  const makecolour = (winner: string, winmove: number[], player: string) => {
-    return (
-      <>
-        <div className="">
-          {list.map((value, index) => (
-            <Square
-              key={index}
-              value={value.move}
-              onSquareClick={() => {
-                alert("game over");
-              }}
-              border={
-                winmove.includes(index)
-                  ? winner === player
-                    ? "green"
-                    : "red"
-                  : "yellow"
-              }
-            />
-          ))}
-        </div>
-      </>
-    );
-  };
+  // const makecolour = (winner: string, winmove: number[], player: string) => {
+  //   return (
+  //     <>
+  //       <div className="">
+  //         {list.map((value, index) => (
+  //           <Square
+  //             key={index}
+  //             value={value.move}
+  //             onSquareClick={() => {
+  //               alert("game over");
+  //             }}
+  //             border={
+  //               winmove.includes(index)
+  //                 ? winner === player
+  //                   ? "green"
+  //                   : "red"
+  //                 : "yellow"
+  //             }
+  //           />
+  //         ))}
+  //       </div>
+  //     </>
+  //   );
+  // };
   function calculateWinner(squares: ListItem[]) {
     const lines = [
       [0, 1, 2],
@@ -127,8 +139,8 @@ export default function GameSocket({ gameId, symbol }: GameProp) {
         squares[a].move === squares[c].move
       ) {
         const winmove = [a, b, c];
-        winner(gameId, list, squares[a].user, winmove);
-        makecolour(squares[a].user, winmove, player);
+        winner(gameId, list, squares[a].user, winmove,roomId);
+        // makecolour(squares[a].user, winmove, player);
         return;
       }
     }
@@ -141,12 +153,21 @@ export default function GameSocket({ gameId, symbol }: GameProp) {
     return null;
   }
   const handleClick = (index: number) => {
+    console.log(playerNo);
     if (!canClick) {
-      alert("it's opponents time for move");
+      if (gameWinner != "") {
+        alert(`game over`);
+        return;              
+      }
+      alert("wait for opponents move");
       return;
     }
     const newList = [...list];
-    newList[index] = { ...newList[index], move: usersymbol, user: player }; // Update the object at the specified index
+    newList[index] = {
+      ...newList[index],
+      move: usersymbol,
+      user: playerNo,
+    }; // Update the object at the specified index
     calculateWinner(newList);
     setList(newList);
     makeMove(gameId, usersymbol, newList);
@@ -154,8 +175,14 @@ export default function GameSocket({ gameId, symbol }: GameProp) {
   };
   return (
     <>
-      <div className="absolute z-10 min-h-screen w-full  flex justify-center items-center">
+      <LampDemo />
+      <div className="absolute min-h-screen w-full  flex justify-around items-center flex-col">
         <div className="flex flex-col items-center justify-center ">
+          {gameWinner != "" && (
+            <h1>{`Game Over and ${
+              gameWinner === playerNo ? "You wins" : "Opponent Wins"
+            }`}</h1>
+          )}
           <div className="mb-8">
             <div className="grid grid-cols-3 gap-2">
               {list.map((value, index) => (
@@ -168,10 +195,9 @@ export default function GameSocket({ gameId, symbol }: GameProp) {
               ))}
             </div>
           </div>
-          <div>
-          <GameChat gameId={gameId} player={parseInt(player)} />
-          </div>
+          <div></div>
         </div>
+        {/* <GameChat gameId={gameId} player={parseInt(player)} /> */}
       </div>
     </>
   );

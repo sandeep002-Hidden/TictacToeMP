@@ -4,6 +4,7 @@ import next from "next";
 import { Server } from "socket.io";
 import Game from "./src/model/game.model.js";
 import connect from "./src/database/connect.js";
+import Room from "./src/model/room.model.js";
 
 connect();
 const dev = process.env.NODE_ENV !== "production";
@@ -43,7 +44,10 @@ app.prepare().then(() => {
     socket.on("startMatch", async (roomName) => {
       if (!roomReadyStates[roomName].player2) {
         console.log("qqq");
-        io.to(roomName).emit("wait", { message: "Wait for getting ready" });
+        io.to(roomName).emit("wait", {
+          message: "Wait for getting ready",
+          roomName,
+        });
         return;
       }
       try {
@@ -52,7 +56,10 @@ app.prepare().then(() => {
         await newGame.save({});
         console.log(newGame);
         console.log("start match");
-        io.to(roomName).emit("matchStarted", newGame._id);
+        io.to(roomName).emit("matchStarted", {
+          newGame: newGame._id,
+          roomName,
+        });
       } catch (error) {
         console.error("Error saving new game:", error.message);
       }
@@ -60,22 +67,26 @@ app.prepare().then(() => {
     socket.on("gamestart", (GameId) => {
       socket.join(GameId);
     });
-
     socket.on("move", (gameId, symbol, newList) => {
       socket.to(gameId).emit("move", { symbol, newList });
     });
-    socket.on("winner", async (gameId, moves, winner,winmove) => {
+    socket.on("winner", async (gameId, moves, winner, winmove, roomId) => {
+      console.log(typeof roomId)
+      console.log(typeof gameId)
       await Game.findByIdAndUpdate(
-        { _id: gameId },
+        gameId ,
         { $set: { winner: winner, moves: moves, GameOver: true } }
       );
-      socket.to(gameId).emit("winner", { winner,winmove });
+      await Room.findOneAndUpdate(
+        {RoomName:roomId} ,
+        { $set: { player1: "", player2: "", isOpen: true } }
+      );
+      socket.to(gameId).emit("winner", { winner, winmove,roomId });
     });
     socket.on("disconnect", () => {
       console.log("User is disconnected:");
     });
   });
-
   httpServer
     .once("error", (err) => {
       console.error(err);

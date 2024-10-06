@@ -9,8 +9,9 @@ export async function GET(req: NextRequest) {
   try {
     const userId =await getDataFromToken(req);
     const user = await User.find({ _id: userId })
-    return NextResponse.json({ message: "User Found", data: user[0] });
+    return NextResponse.json({ message: "User Found", data: user[0],success:true },{status:200});
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+    console.log(error.message)
+    return NextResponse.json({ error: error.message,success:false }, { status: 400 });
   }
 }

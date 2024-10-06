@@ -5,6 +5,10 @@ interface StartProp {
   roomName: string;
   symbol:string
 }
+interface mathstartedProp{
+  newGame:string;
+  roomName:string;
+}
 export default function StartMatch({ roomName,symbol }: StartProp) {
   const router = useRouter()
   const { socket, startMatch } = useSocket();
@@ -17,9 +21,8 @@ export default function StartMatch({ roomName,symbol }: StartProp) {
     socket.on("emit",(message:string)=>{
       console.log(message)
     })
-    socket.on("matchStarted", (matchId:Object) => {
-      console.log(matchId)
-      router.push(`/arena/${matchId}`)
+    socket.on("matchStarted", (data:mathstartedProp) => {
+      router.push(`/arena/${data.newGame}-${data.roomName}`)
     });
     return () => {
       socket.off("matchStarted");
@@ -27,7 +30,7 @@ export default function StartMatch({ roomName,symbol }: StartProp) {
     };
   }, [socket]);
   const getStarted = () => {
-    localStorage.setItem("admin-symbol",symbol)
+    localStorage.setItem(`${roomName}as`,symbol)
     startMatch(roomName);
   };
   return (

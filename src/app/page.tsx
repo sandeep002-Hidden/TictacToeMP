@@ -11,10 +11,10 @@ export default function Main() {
   useEffect(() => {
     const timer1 = setTimeout(() => {
       setFadeOut(true);
-    }, 5000);
+    }, 2000);
     const timer2 = setTimeout(() => {
       setShowHome(false);
-    }, 5500);
+    }, 2500);
 
     return () => {
       clearTimeout(timer1);

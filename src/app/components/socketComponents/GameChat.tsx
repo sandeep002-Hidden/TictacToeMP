@@ -20,25 +20,35 @@ export default function GameChat({ gameId, player }: ChatProps) {
   }, [socket]);
   const handleSendMessage = () => {
     sendMessage(gameId, message);
-    setMessage("")
+    setMessage("");
   };
   return (
-    <div className="chat-container">
-      <div className="messages">
+    <div className="absolute z-20 bottom-10 left-10 h-fit flex justify-center items-center flex-col w-30vw bg-gray-900 rounded-xl p-4">
+      <div className={` text-xs messages flex items-center justify-end h-50vh  w-full flex-col overflow-y-scroll`}>
         {messages.map((msg, index) => (
-          <div key={index} className="message">
-            <strong>{msg.userId===socket.id?"You":`player${player==1?"2":"1"}`}: </strong>
+          <div key={index} className={`m-1 h-fit py-1 bg-slate-800 rounded-xl w-10/12 flex  items-start ${msg.userId === socket.id?"justify-end":"justify-start"} break-all`}>
+            <div className=" ml-1 w-fit break-keep">
+              {msg.userId === socket.id
+                ? "You"
+                : `player${player == 1 ? "2" : "1"}`}
+              :{" "}
+            </div>
             {msg.message}
           </div>
         ))}
       </div>
-      <input
-        type="text"
-        value={message||""}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type a message..."
-      />
-      <button onClick={handleSendMessage}>Send</button>
+      <div className="flex justify-between items-center ">
+        <input
+          type="text"
+          value={message || ""}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Type a message..."
+          className="h-12 w-64 rounded-md"
+        />
+        <button onClick={handleSendMessage}
+        className="w-24 h-12 bg-black border-2 border-black rounded-xl"
+        >Send ➡️ </button>
+      </div>
     </div>
   );
 }

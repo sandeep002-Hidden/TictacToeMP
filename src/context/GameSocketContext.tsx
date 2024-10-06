@@ -10,9 +10,8 @@ interface GSocketContext {
   socket: any;
   isSocketConnected: boolean;
   makeMove:(gameId:string,symbol:string,newList:arrayType[])=>void
-  winner:(gameId:string,moves:arrayType[],winner:string,winmove:number[])=>void
+  winner:(gameId:string,moves:arrayType[],winner:string,winmove:number[],roomId:string)=>void
   sendMessage: (roomName: string, message: string) => void;
-
 }
 export const GameSocketContext = createContext<GSocketContext | null>(null);
 export const GameSocketContextProvider = ({
@@ -53,9 +52,9 @@ export const GameSocketContextProvider = ({
           socket.emit("move",gameId,symbol,newList)
         }
   }
-  const winner=(gameId:string,moves:arrayType[],winner:string,winmove:number[])=>{
+  const winner=(gameId:string,moves:arrayType[],winner:string,winmove:number[],roomId:string)=>{
     if(socket && isSocketConnected){
-      socket.emit("winner",gameId,moves,winner,winmove)
+      socket.emit("winner",gameId,moves,winner,winmove,roomId)
     }
   }
   return (

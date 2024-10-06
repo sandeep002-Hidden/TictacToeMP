@@ -17,6 +17,15 @@ module.exports = {
         'highlight': 'rgb(110, 6, 242)',
         'both':'rgb(161, 0, 255)',
       },
+      minHeight: {
+        '50vh': '50vh',
+      },
+      height: {
+        '50vh': '50vh',
+      },
+      width:{
+        "30vw":"30vw"
+      }
     },
   },
   plugins: [

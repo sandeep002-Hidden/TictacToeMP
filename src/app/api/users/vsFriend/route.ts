@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     try {
         const rooms = await Room.find({
             $or: [{ player1: userId }, { player2: userId }],
-        }).select("roomPassword RoomName -_id");
+        },{isOpen:false}).select("roomPassword RoomName -_id");
 
         if (!rooms || rooms.length === 0) {
             return NextResponse.json(

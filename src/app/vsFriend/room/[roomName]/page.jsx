@@ -45,9 +45,11 @@ export default function RoomName({ params }) {
 
     getPlayerDetails(roomName);
   }, [roomName]);
-  useEffect(()=>{
-    localStorage.setItem("player",player)
-  },[player])
+
+  //set player
+  useEffect(() => {
+    localStorage.setItem(roomName, player);
+  }, [player]);
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
@@ -55,33 +57,19 @@ export default function RoomName({ params }) {
     <SocketProvider roomName={roomName}>
       <div className="h-screen w-screen flex flex-col justify-center items-center bg-black text-white">
         <p>{message}</p>
-        <h1>Room {roomName}</h1>
         {loading ? (
           <Loading />
         ) : (
           <>
             {isRoomCreater ? (
               <>
-              <h1>Choose your symbol</h1>
+                <h1>Choose your symbol</h1>
                 <label>
-                  <input
-                    type="radio"
-                    name="option"
-                    value="X"
-                    checked={selectedOption === "X"}
-                    onChange={handleChange}
-                  />
-                  X
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="option"
-                    value="O"
-                    checked={selectedOption === "O"}
-                    onChange={handleChange}
-                  />
-                  O
+                  Select Option:
+                  <select value={selectedOption} onChange={handleChange}>
+                    <option value="X">X</option>
+                    <option value="O">O</option>
+                  </select>
                 </label>
                 <StartMatch roomName={roomName} symbol={selectedOption} />{" "}
               </>
@@ -91,7 +79,7 @@ export default function RoomName({ params }) {
               </>
             )}
             <div>
-            <Chat roomName={roomName} player={player} />
+              <Chat roomName={roomName} player={player} />
             </div>
           </>
         )}

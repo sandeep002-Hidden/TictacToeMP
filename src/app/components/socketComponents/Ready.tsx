@@ -5,7 +5,10 @@ import { useRouter } from 'next/navigation'
 interface ReadyProp {
   roomName: string;
 }
-
+interface mathstartedProp{
+  newGame:string;
+  roomName:string;
+}
 export default function Ready({ roomName }: ReadyProp) {
   const router = useRouter()
   const { socket, readyForMatch } = useSocket();
@@ -19,9 +22,8 @@ export default function Ready({ roomName }: ReadyProp) {
     socket.on("readyforGame", (data: any) => {
       setIsReady(data.isReady);
     });
-    socket.on("matchStarted", (matchId:Object) => {
-      console.log(matchId)
-      router.push(`/arena/${matchId}`)
+    socket.on("matchStarted", (data:mathstartedProp) => {
+      router.push(`/arena/${data.newGame}-${data.roomName}`)
     });
     return () => {
       socket.off("readyforGame");

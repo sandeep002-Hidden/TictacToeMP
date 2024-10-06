@@ -40,25 +40,21 @@ export const SocketContextProvider = ({
       newSocket.disconnect();
     };
   }, [roomName]);
-
   const sendMessage = (roomName: string, message: string) => {
     if (socket && isSocketConnected) {
       socket.emit("chatMessage", roomName, message);
     }
   };
-
   const readyForMatch = (roomName: string, isReady: boolean) => {
     if (socket && isSocketConnected) {
       socket.emit("readyforGame", roomName, isReady);
     }
   };
-
   const startMatch = (roomName: string) => {
     if (socket && isSocketConnected) {
       socket.emit("startMatch", roomName);
     }
   };
-
   return (
     <SocketContext.Provider
       value={{
