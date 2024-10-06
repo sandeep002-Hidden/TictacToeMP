@@ -4,6 +4,8 @@ import Header from "../components/Header";
 import axios from "axios";
 import Loading from "@/app/components/Loading";
 import RoomName from "../vsFriend/room/[roomName]/page";
+import { useRouter } from 'next/navigation'
+
 interface RoomProps {
   _id: string;
   RoomName: string;
@@ -17,6 +19,8 @@ export default function vsGlobe() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [rooms, setRooms] = useState<RoomProps[]>([]);
   const [message, setMessage] = useState("");
+  const router = useRouter()
+
   useEffect(() => {
     const getAllRooms = async () => {
       setLoading(true);
@@ -71,6 +75,7 @@ export default function vsGlobe() {
           console.log(res.data);
           if (res.data.success) {
             setMessage(res.data.message);
+            router.push(`/vsGlobe/${roomId}`)
           } else {
             setErrMessage(res.data.message);
           }

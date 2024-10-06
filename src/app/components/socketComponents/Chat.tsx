@@ -12,6 +12,7 @@ export default function Chat({ roomName, player }: ChatProps) {
   useEffect(() => {
     if (!socket) return;
     socket.on("chatMessage", (data: any) => {
+      
       setMessages((prevMessages) => [...prevMessages, data]);
     });
     return () => {
@@ -20,13 +21,20 @@ export default function Chat({ roomName, player }: ChatProps) {
   }, [socket]);
   const handleSendMessage = () => {
     sendMessage(roomName, message);
-    setMessage("")
+    setMessage("");
   };
   return (
     <div className="absolute z-20 bottom-10 left-10 h-fit flex justify-center items-center flex-col w-30vw bg-gray-900 rounded-xl p-4">
-      <div className={` text-xs messages flex items-center justify-end h-50vh  w-full flex-col overflow-y-scroll`}>
+      <div
+        className={` text-xs messages flex items-center justify-end h-50vh  w-full flex-col overflow-y-scroll`}
+      >
         {messages.map((msg, index) => (
-          <div key={index} className={`m-1 h-fit py-1 bg-slate-800 rounded-xl w-10/12 flex  items-start ${msg.userId === socket.id?"justify-end":"justify-start"} break-all`}>
+          <div
+            key={index}
+            className={`m-1 h-fit py-1 bg-slate-800 rounded-xl w-10/12 flex  items-start ${
+              msg.userId === socket.id ? "justify-end" : "justify-start"
+            } break-all`}
+          >
             <div className=" ml-1 w-fit break-keep">
               {msg.userId === socket.id
                 ? "You"
@@ -45,9 +53,12 @@ export default function Chat({ roomName, player }: ChatProps) {
           placeholder="Type a message..."
           className="h-12 w-64 rounded-md active:border-none"
         />
-        <button onClick={handleSendMessage}
-        className="w-24 h-12 bg-black border-2 border-black rounded-xl"
-        >Send ➡️ </button>
+        <button
+          onClick={handleSendMessage}
+          className="w-24 h-12 bg-black border-2 border-black rounded-xl"
+        >
+          Send ➡️{" "}
+        </button>
       </div>
     </div>
   );
