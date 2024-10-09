@@ -31,7 +31,6 @@ export default function WaittingPage({ params }: any) {
       setLoading(true);
       try {
         await axios
-          // src\app\api\users\vsGlobe\verifyRoom\route.ts
           .post("/api/users/vsGlobe/verifyRoom", { roomName })
           .then((res) => {
             if (!res.data.success) {
@@ -40,6 +39,12 @@ export default function WaittingPage({ params }: any) {
               setRoomVerified(true);
               setPlayerNo(res.data.playerNo);
               setRoomName(res.data.roomName);
+              localStorage.removeItem(res.data.roomName)
+              localStorage.removeItem(`${res.data.roomName}as`)
+              localStorage.setItem(res.data.roomName,res.data.playerNo.toString())
+              if(res.data.playerNo==1){
+                localStorage.setItem(`${res.data.roomName}as`,"X")
+              }
             }
           });
       } catch (error: any) {
@@ -65,9 +70,7 @@ export default function WaittingPage({ params }: any) {
             <Chat roomName={roomName} player={playerNo} />
           </SocketProvider>
           <VSGlobeProvider roomName={roomName}>
-            <>
-              <Waitting roomName={roomName} />
-            </>
+            <Waitting roomName={roomName} />
           </VSGlobeProvider>
         </>
       ) : (

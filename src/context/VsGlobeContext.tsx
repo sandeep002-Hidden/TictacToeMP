@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 interface iGlobeSocketContext {
   socket: any;
   isSocketConnected: boolean;
+  svGobmatch:(roomName:string)=>void;
 }
 export const VsGlobeContext = createContext<iGlobeSocketContext | null>(null);
 export const SocketContextProvider = ({
@@ -33,13 +34,19 @@ export const SocketContextProvider = ({
     };
   }, [roomName]);
 
-
+  const svGobmatch = (roomName: string) => {
+    console.log("qqqqqqqqqqqqqq")
+    if (socket && isSocketConnected) {
+      socket.emit("svGobmatch",roomName)
+    }
+  };
 
   return (
     <VsGlobeContext.Provider
       value={{
         socket,
         isSocketConnected,
+        svGobmatch,
       }}
     >
       {children}

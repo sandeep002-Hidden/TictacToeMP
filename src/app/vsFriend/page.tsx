@@ -16,7 +16,7 @@ export default function vsFriend() {
   useEffect(() => {
     const getAllRooms = async () => {
       try {
-        await axios.get("/api/users/vsFriend/").then((results) => {
+        await axios.get("/api/users/vsFriend").then((results) => {
           if (!results.data.success) {
             setMessage(results.data.message);
           } else {
@@ -64,7 +64,7 @@ export default function vsFriend() {
                 <Link href={"/vsFriend/joinRoom"}>Join Room</Link>
               </HoverBorderGradient>
             </div>
-            <div className="w-full flex justify-center items-center">
+            <div className="w-full flex justify-center items-center flex-col">
               {rooms.map((item, index) => (
                 <div
                   key={index}

@@ -59,6 +59,7 @@ export default function vsGlobe() {
           console.log(res.data);
           if (res.data.success) {
             setMessage(res.data.message);
+            
           } else {
             setErrMessage(res.data.message);
           }
@@ -113,7 +114,7 @@ export default function vsGlobe() {
                 >
                   <div>
                     <p className="text-xl font-semibold text-slate-600 dark:text-gray-300">
-                      {`Room-${index + 1}`}
+                      {item.RoomName}
                     </p>
                     {item.player1 !== "" && item.player2 !== "" ? (
                       <p className="text-green-600 font-bold dark:text-green-400">

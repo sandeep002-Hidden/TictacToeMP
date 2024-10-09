@@ -17,6 +17,7 @@ app.prepare().then(() => {
   const httpServer = createServer(handler);
   const io = new Server(httpServer);
   const roomReadyStates = {};
+  const availablePlayers = {};
   io.on("connection", (socket) => {
     socket.on("joinRoom", (roomName) => {
       socket.join(roomName);
@@ -71,17 +72,33 @@ app.prepare().then(() => {
       socket.to(gameId).emit("move", { symbol, newList });
     });
     socket.on("winner", async (gameId, moves, winner, winmove, roomId) => {
-      console.log(typeof roomId)
-      console.log(typeof gameId)
-      await Game.findByIdAndUpdate(
-        gameId ,
-        { $set: { winner: winner, moves: moves, GameOver: true } }
-      );
+      console.log(typeof roomId);
+      console.log(typeof gameId);
+      await Game.findByIdAndUpdate(gameId, {
+        $set: { winner: winner, moves: moves, GameOver: true },
+      });
       await Room.findOneAndUpdate(
-        {RoomName:roomId} ,
+        { RoomName: roomId },
         { $set: { player1: "", player2: "", isOpen: true } }
       );
-      socket.to(gameId).emit("winner", { winner, winmove,roomId });
+      socket.to(gameId).emit("winner", { winner, winmove, roomId });
+    });
+    socket.on("joined-vsGlobe", (roomName) => {
+      socket.join(roomName);
+      io.to(roomName).emit("userJoined", { message: "user joined" });
+    });
+    socket.on("svGobmatch", async (roomName) => {
+      const room = await Room.findOne({ RoomName: roomName });
+      const newGame = new Game({
+        player1: room.player1,
+        player2: room.player2,
+      });
+      await newGame.save();
+      io.to(roomName).emit("gobMatchStarted", {
+        newGame: newGame._id,
+        roomName,
+        admin: Math.round(Math.random() * (2 - 1) + 1),
+      });
     });
     socket.on("disconnect", () => {
       console.log("User is disconnected:");
