@@ -14,6 +14,7 @@ export default function Waitting({ roomName }: wattingProp) {
     if (!socket) {
       return;
     }
+    //
     socket.on("userJoined", (data: any) => {
     setCount((prevCount) => prevCount + 1);
       console.log("player joiied the game");
